@@ -6,6 +6,6 @@ type AlanStore = {
 }
 
 export const useAlanStore = create<AlanStore>((set) => ({
-  isTerminalOpen: true,
+  isTerminalOpen: false,
   setIsTerminalOpen: (isOpen) => set({ isTerminalOpen: isOpen }),
 }))

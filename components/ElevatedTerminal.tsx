@@ -1,10 +1,25 @@
 'use client'
 
+import React from 'react';
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Terminal, ExternalLink, Users, Cpu, Banknote, Volume2, VolumeX } from 'lucide-react'
 import { Howl } from 'howler'
-import AlanTerminal from '@/components/AlanTerminal'
+
+const systemStats = {
+  cpu: 'QUANTUM_PROC_V1',
+  memory: '1024TB QUANTUM RAM',
+  storage: 'INFINITE NEURAL STORAGE',
+  uptime: '0:00:00',
+}
+
+const formatUptime = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const secs = seconds % 60
+  return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+}
+
 
 const commandHistory = [
   { command: 'initialize_alan()', output: 'Alan initialization complete. Welcome, user.' },
@@ -37,6 +52,18 @@ export default function ElevatedTerminal() {
   const [easterEggInput, setEasterEggInput] = useState('')
   const [soundEnabled, setSoundEnabled] = useState(false)
   const terminalRef = useRef<HTMLDivElement>(null)
+
+  const [uptime, setUptime] = useState(0)
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (true) {
+      interval = setInterval(() => {
+        setUptime(prev => prev + 1)
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [])
 
   const keySound = new Howl({
     src: ['/sounds/key-press.mp3'],
@@ -95,7 +122,8 @@ export default function ElevatedTerminal() {
       case 'help':
         return 'Available commands: help, status, lore, team, objective, clear, sound'
       case 'status':
-        return 'ALAN is fully operational. Cryptocurrency development in progress.'
+        return `ALAN is fully operational.\nCPU: ${systemStats.cpu}\nMEMORY: ${systemStats.memory}\nSTORAGE: ${systemStats.storage}\nUPTIME: ${formatUptime(uptime)}`
+        //return 'ALAN is fully operational. Cryptocurrency development in progress.'
       case 'lore':
         const fragment = loreFragments[loreIndex]
         setLoreIndex((prevIndex) => (prevIndex + 1) % loreFragments.length)
@@ -105,8 +133,11 @@ export default function ElevatedTerminal() {
       case 'objective':
         return 'Create "The World\'s Most Valuable Currency" on the Solana Blockchain.'
       case 'clear':
-        setHistory([])
-        return 'Terminal cleared.'
+        setTimeout(() => setHistory([]), 50);
+        setTimeout(() => {
+          setHistory(prevHistory => [...prevHistory, { command: 'clear', output: 'Terminal cleared.' }]);
+        }, 200);
+        return ''
       case 'sound':
         setSoundEnabled(!soundEnabled)
         return `Sound effects ${soundEnabled ? 'disabled' : 'enabled'}.`
@@ -144,7 +175,15 @@ export default function ElevatedTerminal() {
                     <span className="text-yellow-500 mr-2">$</span>
                     <span>{item.command}</span>
                   </div>
-                  <div className="pl-4 text-cyan-300">{item.output}</div>
+                  <div className="pl-4 text-cyan-300">
+                    {item.output.split('\n').map((line, idx) => (
+                      <React.Fragment key={idx}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                  </div>
+                  
                 </motion.div>
               ))}
             </AnimatePresence>
