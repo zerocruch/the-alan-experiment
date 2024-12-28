@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Terminal, ExternalLink, Users, Cpu, Banknote, Volume2, VolumeX } from 'lucide-react'
 import { Howl } from 'howler'
+import AlanTerminal from '@/components/AlanTerminal'
 
 const commandHistory = [
   { command: 'initialize_alan()', output: 'Alan initialization complete. Welcome, user.' },
@@ -72,7 +73,7 @@ export default function ElevatedTerminal() {
 
   useEffect(() => {
     Object.entries(easterEggs).forEach(([key, sequence]) => {
-      if (easterEggInput.endsWith(sequence)) {
+      if (easterEggInput.endsWith(key)) {
         setHistory((prev) => [...prev, { command: `Easter egg found: ${key}`, output: `Congratulations! You've unlocked: ${easterEggs[key as keyof typeof easterEggs]}` }])
         if (soundEnabled) successSound.play()
       }

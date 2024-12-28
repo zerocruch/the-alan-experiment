@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import ElevatedTerminal from '@/components/ElevatedTerminal'
 
+
 export default function TerminalPage() {
   const [showTerminal, setShowTerminal] = useState(false)
 
@@ -44,5 +45,6 @@ export default function TerminalPage() {
         </motion.div>
       )}
     </AnimatePresence>
+    
   )
 }

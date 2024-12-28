@@ -21,7 +21,7 @@ export default function LandingPage() {
   useEffect(() => {
     let i = 0
     const typingInterval = setInterval(() => {
-      if (i < fullSubtitle.length) {
+      if (i < fullSubtitle.length - 1) {
         setSubtitle(prev => prev + fullSubtitle[i])
         i++
       } else {
@@ -32,8 +32,13 @@ export default function LandingPage() {
     return () => clearInterval(typingInterval)
   }, [])
 
-  const handleInitialize = () => {
-    setShowPasswordPrompt(true)
+  const handleInitialize = async () => {
+    //ignore password
+    //setShowPasswordPrompt(true)
+    //move to terminal directly
+    setIsLoading(true)
+    await new Promise(resolve => setTimeout(resolve, 5000))
+    router.push('/terminal')
   }
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
