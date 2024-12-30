@@ -64,8 +64,10 @@ export default function ElevatedTerminal() {
       try {
         const response = await axios.get('https://www.agentalan.org/api/data');
         console.log(response.data.data);
+        console.log(response.data.data.length)
         if (response.data.data.length > 0) {
           const lastItem = response.data.data[response.data.data.length - 1];
+          console.log('Last Item created_at:', lastItem.created_at);
           setLastUpdate(lastItem.created_at);
         }
         //console.log(response.data.data[response.data.data.length - 1]['created_at']);
