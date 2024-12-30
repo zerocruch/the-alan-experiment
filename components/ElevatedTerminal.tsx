@@ -56,6 +56,7 @@ export default function ElevatedTerminal() {
   const terminalRef = useRef<HTMLDivElement>(null)
 
   const [uptime, setUptime] = useState(0)
+  const [last_update, setLastUpdate] = useState('')
 
   useEffect(() => {
     // Fetch data from the API on page load
@@ -63,6 +64,8 @@ export default function ElevatedTerminal() {
       try {
         const response = await axios.get('https://www.agentalan.org/api/data');
         console.log(response.data.data);
+        console.log(response.data.data[-1]['created_at']);
+        setLastUpdate(response.data.data[-1]['created_at']);
         response.data.data.forEach((item: any) => {
           const newCommand = {
             command: `Action: ${item.action}`,
@@ -77,6 +80,29 @@ export default function ElevatedTerminal() {
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://www.agentalan.org/api/data?date=' + last_update);
+        console.log(response.data.data);
+        setLastUpdate(response.data.data[-1]['created_at']);
+        response.data.data.forEach((item: any) => {
+          const newCommand = {
+            command: `Action: ${item.action}`,
+            output: `Agent: ${item.agent}\nData: ${JSON.stringify(item.data)}\nCreated At: ${new Date(item.created_at).toLocaleString()}`
+          };
+          setHistory((prevHistory) => [...prevHistory, newCommand]);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    const intervalId = setInterval(fetchData, 10000); // Fetch data every 10 seconds
+
+    return () => clearInterval(intervalId); // Clear interval on component unmount
   }, []);
 
   useEffect(() => {
