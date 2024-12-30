@@ -114,7 +114,7 @@ export default function ElevatedTerminal() {
     const intervalId = setInterval(fetchData, 10000); // Fetch data every 10 seconds
 
     return () => clearInterval(intervalId); // Clear interval on component unmount
-  }, []);
+  }, [last_update]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout
