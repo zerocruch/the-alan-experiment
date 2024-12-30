@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
       await client.close();
 
-      const { date } = req.body;
+      const { date } = req.query;
 
       if (!date) {
         return res.status(200).json({
@@ -36,14 +36,6 @@ export default async function handler(req, res) {
           data: filteredPosts,
         });
       }
-
-      //const filteredPosts = filterPostsByDate(posts, '2024-12-30T16:50:00.000Z');
-
-      /*const hasWon = messages.some((item) => item.won === true);
-
-      const currentDate = new Date();
-      console.log(currentDate);
-      const gameOver = currentDate.getTime() >= endDate.getTime();*/
     } catch (error) {
       return res.status(500).json({ error: "Failed to fetch messages" });
     }
