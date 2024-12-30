@@ -64,8 +64,8 @@ export default function ElevatedTerminal() {
       try {
         const response = await axios.get('https://www.agentalan.org/api/data');
         console.log(response.data.data);
-        console.log(response.data.data[-1]['created_at']);
-        setLastUpdate(response.data.data[-1]['created_at']);
+        console.log(response.data.data[response.data.data.length - 1]['created_at']);
+        setLastUpdate(response.data.data[response.data.data.length - 1]['created_at']);
         response.data.data.forEach((item: any) => {
           const newCommand = {
             command: `Action: ${item.action}`,
@@ -87,7 +87,7 @@ export default function ElevatedTerminal() {
       try {
         const response = await axios.get('https://www.agentalan.org/api/data?date=' + last_update);
         console.log(response.data.data);
-        setLastUpdate(response.data.data[-1]['created_at']);
+        setLastUpdate(response.data.data[response.data.data.length - 1]['created_at']);
         response.data.data.forEach((item: any) => {
           const newCommand = {
             command: `Action: ${item.action}`,
