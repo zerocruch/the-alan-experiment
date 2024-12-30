@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Terminal, ExternalLink, Users, Cpu, Banknote, Volume2, VolumeX } from 'lucide-react'
 import { Howl } from 'howler'
+import axios from 'axios'; // Add this import
 
 const systemStats = {
   cpu: 'QUANTUM_PROC_V1',
@@ -19,6 +20,7 @@ const formatUptime = (seconds: number) => {
   const secs = seconds % 60
   return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
 }
+
 
 
 const commandHistory = [
@@ -54,6 +56,20 @@ export default function ElevatedTerminal() {
   const terminalRef = useRef<HTMLDivElement>(null)
 
   const [uptime, setUptime] = useState(0)
+
+  useEffect(() => {
+    // Fetch data from the API on page load
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://www.agentalan.org/api/data');
+        console.log(response.data); // Handle the response data as needed
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout
