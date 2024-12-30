@@ -62,7 +62,15 @@ export default function ElevatedTerminal() {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://www.agentalan.org/api/data');
-        console.log(response.data); // Handle the response data as needed
+        console.log(response.data.data);
+        response.data.data.forEach((item: any) => {
+          const newCommand = {
+            command: `Action: ${item.action}`,
+            output: `Agent: ${item.agent}\nData: ${JSON.stringify(item.data)}\nCreated At: ${new Date(item.created_at).toLocaleString()}`
+          };
+          setHistory((prevHistory) => [...prevHistory, newCommand]);
+        });
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
