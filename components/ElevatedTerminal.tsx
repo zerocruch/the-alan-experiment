@@ -61,6 +61,7 @@ export default function ElevatedTerminal() {
 
   const [uptime, setUptime] = useState(0)
   const [last_update, setLastUpdate] = useState('')
+  const [displayedOutput, setDisplayedOutput] = useState<{ [key: number]: string }>({});
 
   useEffect(() => {
     // Fetch data from the API on page load
@@ -136,11 +137,11 @@ export default function ElevatedTerminal() {
   })
 
   const successSound = new Howl({
-    src: ['/sounds/success.mp3'],
+    src: ['/sounds/SuccessNotif.mp3'],
     volume: 0.5,
   })
   const accessGrantedSound = new Howl({
-    src: ['/sounds/accessGrantedAudio.mp3'],
+    src: ['/sounds/AccessGrantedAudioF.mp3'],
     volume: 0.5,
   })
 
@@ -177,13 +178,26 @@ export default function ElevatedTerminal() {
   }, [easterEggInput, soundEnabled])
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (input.trim() === '') return
+    e.preventDefault();
+    if (input.trim() === '') return;
 
-    const newCommand = { command: input, output: processCommand(input) }
-    setHistory([...history, newCommand])
-    setInput('')
-    if (soundEnabled) successSound.play()
+    const newCommand = { command: input, output: processCommand(input) };
+    setHistory([...history, newCommand]);
+    setInput('');
+    if (soundEnabled) successSound.play();
+    simulateTyping(newCommand.output, history.length); 
+  }
+
+  const simulateTyping = (output: string, index: number) => {
+    let currentOutput = '';
+    setDisplayedOutput((prev) => ({ ...prev, [index]: '' })); // Initialize for this command
+
+    output.split('').forEach((char, charIndex) => {
+      setTimeout(() => {
+        currentOutput += char;
+        setDisplayedOutput((prev) => ({ ...prev, [index]: currentOutput }));
+      }, charIndex * 20); // Adjust typing speed here (100ms per character)
+    });
   }
 
   const processCommand = (cmd: string): string => {
@@ -295,14 +309,8 @@ export default function ElevatedTerminal() {
                     <span>{item.command}</span>
                   </div>
                   <div className="pl-4 text-cyan-300">
-                    {item.output.split('\n').map((line, idx) => (
-                      <React.Fragment key={idx}>
-                        {line}
-                        <br />
-                      </React.Fragment>
-                    ))}
+                    {displayedOutput[index] || ''}
                   </div>
-                  
                 </motion.div>
               ))}
             </AnimatePresence>

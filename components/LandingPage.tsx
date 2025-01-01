@@ -69,7 +69,6 @@ export default function LandingPage() {
 
   return (
     <div className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden">
-
       <MatrixRain />
       <AnimatePresence>
         {isLoading ? (
