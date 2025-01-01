@@ -309,7 +309,13 @@ export default function ElevatedTerminal() {
                     <span>{item.command}</span>
                   </div>
                   <div className="pl-4 text-cyan-300">
-                    {displayedOutput[index] || ''}
+                    {item.output.split('\n').map((line, idx) => (
+                      <React.Fragment key={idx}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))}
+
                   </div>
                 </motion.div>
               ))}
