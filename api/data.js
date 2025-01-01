@@ -12,6 +12,7 @@ function filterPostsByDate(posts, date) {
 }
 
 export default async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   if (req.method === "GET") {
     try {
       const client = new MongoClient(MONGO_URI);
