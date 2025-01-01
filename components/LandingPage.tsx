@@ -20,7 +20,7 @@ export default function LandingPage() {
   const fullSubtitle = "Explore the realm of advanced artificial intelligence"
 
   const landingAudio = new Howl({
-    src: ['/sounds/landingAudioF.mp3'],
+    src: ['/sounds/LandingAudioF.mp3'],
     loop: true,
     volume: 0.5,
   });
