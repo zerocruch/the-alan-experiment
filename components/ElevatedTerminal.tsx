@@ -5,13 +5,16 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Terminal, ExternalLink, Users, Cpu, Banknote, Volume2, VolumeX } from 'lucide-react'
 import { Howl } from 'howler'
-import axios from 'axios'; // Add this import
+import axios from 'axios'; 
+import ParticleBackground from './ParticleBackground'
+import MatrixRain from './MatrixRain'
+
 
 const systemStats = {
-  cpu: 'QUANTUM_PROC_V1',
-  memory: '1024TB QUANTUM RAM',
-  storage: 'INFINITE NEURAL STORAGE',
-  uptime: '0:00:00',
+  cpu: 'AMD EPYC 7763', 
+  memory: '1TB DDR4 RAM', 
+  storage: '100TB NVMe SSD', 
+  uptime: '0:00:00', 
 }
 
 const formatUptime = (seconds: number) => {
@@ -32,7 +35,7 @@ const commandHistory = [
 const loreFragments = [
   "Project ALAN: Autonomous Linguistic Artificial Network",
   "Objective: Create world's most valuable cryptocurrency on Solana",
-  "AI Team: 7 specialized assistants known as 'Gayboys'",
+  "AI Team: 4 specialized assistants known as 'system'",
   "Key areas: Marketing, Development, Branding, Community Management, Strategy",
   "Inspiration: Alan Turing's visionary work in artificial intelligence",
   "Goal: Showcase AI's capability to operate as a human-like team",
@@ -44,6 +47,7 @@ const easterEggs = {
   'pride': 'Love wins!',
   '42': 'The answer to life, the universe, and everything.',
   'turing': 'The imitation game begins...',
+  'xd':'You found it you earn the $1,000,000',
 }
 
 export default function ElevatedTerminal() {
@@ -52,7 +56,7 @@ export default function ElevatedTerminal() {
   const [showCursor, setShowCursor] = useState(true)
   const [loreIndex, setLoreIndex] = useState(0)
   const [easterEggInput, setEasterEggInput] = useState('')
-  const [soundEnabled, setSoundEnabled] = useState(false)
+  const [soundEnabled, setSoundEnabled] = useState(true)
   const terminalRef = useRef<HTMLDivElement>(null)
 
   const [uptime, setUptime] = useState(0)
@@ -135,6 +139,10 @@ export default function ElevatedTerminal() {
     src: ['/sounds/success.mp3'],
     volume: 0.5,
   })
+  const accessGrantedSound = new Howl({
+    src: ['/sounds/accessGrantedAudio.mp3'],
+    volume: 0.5,
+  })
 
   useEffect(() => {
     const cursorInterval = setInterval(() => {
@@ -190,7 +198,7 @@ export default function ElevatedTerminal() {
         setLoreIndex((prevIndex) => (prevIndex + 1) % loreFragments.length)
         return fragment
       case 'team':
-        return 'The Gayboys: 7 AI assistants specializing in key areas of cryptocurrency development and management.'
+        return 'The team : 4 AI assistants specializing in key areas of cryptocurrency development and management.'
       case 'objective':
         return 'Create "The World\'s Most Valuable Currency" on the Solana Blockchain.'
       case 'clear':
@@ -207,14 +215,64 @@ export default function ElevatedTerminal() {
     }
   }
 
+  useEffect(() => {
+    // Play success sound when the terminal is loaded
+    if (soundEnabled) {
+      accessGrantedSound.play();
+    }
+
+  }, []); // Empty dependency array to run only on mount
+
   return (
-    <div className="min-h-screen bg-black text-green-500 p-4 font-mono">
+
+    <div className="min-h-screen bg-black text-green-500 p-4 font-mono relative">
+          <ParticleBackground />
+      <style>
+        {`
+          .matrix-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; /* Ensure it stays behind other elements */
+            pointer-events: none; /* Prevent interaction with the background */
+          }
+
+          .falling {
+            color: rgba(0, 255, 0, 0.7); /* Matrix green color */
+            font-family: monospace;
+            font-size: 20px;
+            white-space: nowrap;
+            position: absolute;
+            bottom: 100%;
+            animation: fall linear infinite;
+          }
+
+          @keyframes fall {
+            0% {
+              transform: translateY(0);
+            }
+            100% {
+              transform: translateY(100vh);
+            }
+          }
+        `}
+      </style>
+      <div className="matrix-background">
+        {Array.from({ length: 100 }).map((_, index) => (
+          <div key={index} className="falling" style={{ left: `${Math.random() * 100}vw`, animationDuration: `${Math.random() * 3 + 2}s` }}>
+            {String.fromCharCode(Math.floor(Math.random() * 122) + 33)}
+          </div>
+        ))}
+      </div>
       <div className="max-w-4xl mx-auto">
         <header className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">ALAN Terminal v2.2</h1>
           <div className="flex items-center space-x-2">
             <Terminal size={24} />
-            <span>Quantum-Enhanced AI Interface</span>
+            <span>System Interface</span>
             <button onClick={() => setSoundEnabled(!soundEnabled)} className="ml-4">
               {soundEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
             </button>
@@ -271,7 +329,7 @@ export default function ElevatedTerminal() {
         </main>
         <footer className="mt-4 flex flex-wrap justify-between text-sm">
           <span className="flex items-center"><Cpu size={16} className="mr-1" /> Quantum Core: Active</span>
-          <span className="flex items-center"><Users size={16} className="mr-1" /> Gayboys: Connected</span>
+          <span className="flex items-center"><Users size={16} className="mr-1" /> System: Connected</span>
           <span className="flex items-center"><Banknote size={16} className="mr-1" /> Project: In Development</span>
           <div className="w-full mt-2 flex justify-between">
             <a href="https://dexscreener.com" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">

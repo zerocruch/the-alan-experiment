@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import LoadingAnimation from './LoadingAnimation'
 import ParticleBackground from './ParticleBackground'
 import MatrixRain from './MatrixRain'
+import { Howl } from 'howler'
 
 export default function LandingPage() {
   const router = useRouter()
@@ -17,6 +18,20 @@ export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [subtitle, setSubtitle] = useState('')
   const fullSubtitle = "Explore the realm of advanced artificial intelligence"
+
+  const landingAudio = new Howl({
+    src: ['/sounds/landingAudioF.mp3'],
+    loop: true,
+    volume: 0.5,
+  });
+
+  useEffect(() => {
+    landingAudio.play();
+
+    return () => {
+      landingAudio.stop();
+    };
+  }, []);
 
   useEffect(() => {
     let i = 0
@@ -54,7 +69,7 @@ export default function LandingPage() {
 
   return (
     <div className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden">
-      <ParticleBackground />
+
       <MatrixRain />
       <AnimatePresence>
         {isLoading ? (

@@ -7,10 +7,10 @@ import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 
 const systemStats = {
-  cpu: 'QUANTUM_PROC_V1',
-  memory: '1024TB QUANTUM RAM',
-  storage: 'INFINITE NEURAL STORAGE',
-  uptime: '0:00:00',
+  cpu: 'AMD EPYC 7763', 
+  memory: '1TB DDR4 RAM', 
+  storage: '100TB NVMe SSD', 
+  uptime: '0:00:00', 
 }
 
 export default function AlanTerminal() {
