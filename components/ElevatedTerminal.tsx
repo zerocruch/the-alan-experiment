@@ -27,6 +27,7 @@ const formatUptime = (seconds: number) => {
 
 
 const commandHistory = [
+  { command: 'about()', output: 'This project revolves around creating a singular, high-functional, autonomous AI Agent modeled after Alan Turing, who will go on to create his own Fleet of AI to manage a cryptocurrency project that intended to become "The World’s Most Valuable Currency" on the Solana Blockchain. Alan (The Initial AI) will design a team of 4 AI assistants, each specializing in key areas like marketing, branding, community management, and strategy. The goal is to have these AIs work collaboratively to develop, launch, and manage the cryptocurrency, showcasing AI’s capability to operate as a human-like team in a modern digital ecosystem.' },
   { command: 'initialize_alan()', output: 'Alan initialization complete. Welcome, user.' },
   { command: 'system_status()', output: 'All systems operational. Quantum core stable.' },
   { command: 'connect_neural_network()', output: 'Neural network connection established.' },
@@ -68,21 +69,20 @@ export default function ElevatedTerminal() {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://www.agentalan.org/api/data');
-        console.log(response.data.data);
-        console.log(response.data.data.length)
         if (response.data.data.length > 0) {
           const lastItem = response.data.data[response.data.data.length - 1];
           console.log('Last Item created_at:', lastItem.created_at);
           setLastUpdate(lastItem.created_at);
         }
-        //console.log(response.data.data[response.data.data.length - 1]['created_at']);
-        //setLastUpdate(response.data.data[response.data.data.length - 1]['created_at']);
-        response.data.data.forEach((item: any) => {
-          const newCommand = {
-            command: `Action: ${item.action}`,
-            output: `Agent: ${item.agent}\nData: ${JSON.stringify(item.data)}\nCreated At: ${new Date(item.created_at).toLocaleString()}`
-          };
-          setHistory((prevHistory) => [...prevHistory, newCommand]);
+        const newCommands = response.data.data.map((item: any) => ({
+          command: `Action: ${item.action}`,
+          output: `Agent: ${item.agent}\nData: ${JSON.stringify(item.data)}\nCreated At: ${new Date(item.created_at).toLocaleString()}`
+        }));
+        console.log(newCommands);
+        setHistory((prevHistory) => {
+          const existingCommands = new Set(prevHistory.map(item => item.output));
+          const filteredNewCommands = newCommands.filter(item => !existingCommands.has(item.output));
+          return [...prevHistory, ...filteredNewCommands];
         });
 
       } catch (error) {
@@ -110,6 +110,7 @@ export default function ElevatedTerminal() {
             output: `Agent: ${item.agent}\nData: ${JSON.stringify(item.data)}\nCreated At: ${new Date(item.created_at).toLocaleString()}`
           };
           setHistory((prevHistory) => [...prevHistory, newCommand]);
+          //simulateTyping(newCommand.output); 
         });
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -182,20 +183,21 @@ export default function ElevatedTerminal() {
     if (input.trim() === '') return;
 
     const newCommand = { command: input, output: processCommand(input) };
-    setHistory([...history, newCommand]);
+    //setHistory([...history, newCommand]);
+    setHistory((prevHistory) => [...prevHistory, newCommand]);
     setInput('');
     if (soundEnabled) successSound.play();
-    simulateTyping(newCommand.output, history.length); 
+    simulateTyping(newCommand.output); 
   }
 
-  const simulateTyping = (output: string, index: number) => {
+  const simulateTyping = (output: string) => {
     let currentOutput = '';
-    setDisplayedOutput((prev) => ({ ...prev, [index]: '' })); // Initialize for this command
+    setDisplayedOutput((prev) => ({ ...prev, [history.length]: '' })); // Initialize for this command
 
     output.split('').forEach((char, charIndex) => {
       setTimeout(() => {
         currentOutput += char;
-        setDisplayedOutput((prev) => ({ ...prev, [index]: currentOutput }));
+        setDisplayedOutput((prev) => ({ ...prev, [history.length]: currentOutput }));
       }, charIndex * 20); // Adjust typing speed here (100ms per character)
     });
   }
@@ -203,7 +205,9 @@ export default function ElevatedTerminal() {
   const processCommand = (cmd: string): string => {
     switch (cmd.toLowerCase()) {
       case 'help':
-        return 'Available commands: help, status, lore, team, objective, clear, sound'
+        return 'Available commands: help, about, status, lore, team, objective, clear, sound'
+      case 'about':
+        return 'This project revolves around creating a singular, high-functional, autonomous AI Agent modeled after Alan Turing, who will go on to create his own Fleet of AI to manage a cryptocurrency project that intended to become "The World’s Most Valuable Currency" on the Solana Blockchain. Alan (The Initial AI) will design a team of 4 AI assistants, each specializing in key areas like marketing, branding, community management, and strategy. The goal is to have these AIs work collaboratively to develop, launch, and manage the cryptocurrency, showcasing AI’s capability to operate as a human-like team in a modern digital ecosystem.'
       case 'status':
         return `ALAN is fully operational.\nCPU: ${systemStats.cpu}\nMEMORY: ${systemStats.memory}\nSTORAGE: ${systemStats.storage}\nUPTIME: ${formatUptime(uptime)}`
         //return 'ALAN is fully operational. Cryptocurrency development in progress.'
@@ -309,13 +313,22 @@ export default function ElevatedTerminal() {
                     <span>{item.command}</span>
                   </div>
                   <div className="pl-4 text-cyan-300">
-                    {item.output.split('\n').map((line, idx) => (
+                  {displayedOutput[index] ? (
+                    displayedOutput[index].split('\n').map((line, idx) => (
                       <React.Fragment key={idx}>
                         {line}
                         <br />
                       </React.Fragment>
-                    ))}
-
+                    ))
+                  ) : (
+                    item.output.split('\n').map((line, idx) => (
+                      <React.Fragment key={idx}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))
+                  )}
+                    
                   </div>
                 </motion.div>
               ))}
@@ -348,11 +361,11 @@ export default function ElevatedTerminal() {
           <div className="w-full mt-2 flex justify-between">
             <a href="https://dexscreener.com" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
               <ExternalLink size={16} className="mr-1" />
-              DexScreener
+              Docs
             </a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
               <ExternalLink size={16} className="mr-1" />
-              Twitter
+              X
             </a>
             <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
               <ExternalLink size={16} className="mr-1" />
