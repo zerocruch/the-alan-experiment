@@ -356,20 +356,20 @@ export default function ElevatedTerminal() {
         </main>
         <footer className="mt-4 flex flex-wrap justify-between text-sm">
           <span className="flex items-center"><Cpu size={16} className="mr-1" /> Quantum Core: Active</span>
-          <span className="flex items-center"><Users size={16} className="mr-1" /> System: Connected</span>
-          <span className="flex items-center"><Banknote size={16} className="mr-1" /> Project: In Development</span>
+          <span className="flex items-center"><Users size={16} className="mr-1" /> Agents Status: Deployed</span>
+          <span className="flex items-center"><Banknote size={16} className="mr-1" /> Project: Launched</span>
           <div className="w-full mt-2 flex justify-between">
-            <a href="https://dexscreener.com" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
+            <a href="https://github.com/zerocruch/the-alan-experiment/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
               <ExternalLink size={16} className="mr-1" />
               Docs
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
+            <a href="https://x.com/aexonsol" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
               <ExternalLink size={16} className="mr-1" />
               X
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
+            <a href="https://x.com/aexagentalan" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
               <ExternalLink size={16} className="mr-1" />
-              Chart
+              Agent Alan
             </a>
             <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
               <ExternalLink size={16} className="mr-1" />
