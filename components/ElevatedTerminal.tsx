@@ -371,9 +371,9 @@ export default function ElevatedTerminal() {
               <ExternalLink size={16} className="mr-1" />
               Agent Alan
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
+            <a href="https://pump.fun/coin/T2fKHPtso7fDafuUANAKB6W2d55CEPxFj1urrnwpump" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-green-400">
               <ExternalLink size={16} className="mr-1" />
-              CA: 
+              CA: T2fKHPtso7fDafuUANAKB6W2d55CEPxFj1urrnwpump
             </a>
           </div>
         </footer>
